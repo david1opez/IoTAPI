@@ -48,3 +48,7 @@ app.post('/sensors', (req, res) => {
         res.send('Data Received: ' + JSON.stringify(data));
     });
 });
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
