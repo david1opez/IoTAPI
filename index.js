@@ -8,7 +8,7 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-const db = mysql2.createConnection('mysql://fmfn65aujz2891d9zy80:pscale_pw_1TfJOp8lSrxvD1CLhlawZlNzjPLI6yeycz5UoGLEwMO@aws.connect.psdb.cloud/iotproyecto?ssl={"rejectUnauthorized":true}'
+const db = mysql2.createConnection('mysql://npcuuumlhmfqng0e606g:pscale_pw_z6dX9H37zKNUoTRaeUoRoqC5FJtqxmhU6E6PFzlcXm6@aws.connect.psdb.cloud/iotproyecto?ssl={"rejectUnauthorized":true}'
 )
 
 db.connect((err) => {
