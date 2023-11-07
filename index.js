@@ -8,14 +8,8 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-const db = mysql2.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '@Inteligente2004',
-    database: 'iotproyecto',
-});
+const db = mysql2.createConnection('mysql://eqv2jkzeof73eibyd7nu:pscale_pw_vhb3sBUUsv18YVi7YTdsXTRh9nf7VtNRGxjxMTMjW2j@aws.connect.psdb.cloud/iotproyecto?ssl={"rejectUnauthorized":true}')
   
-// Connect to MySQL
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to MySQL: ' + err.stack);
@@ -31,7 +25,6 @@ app.get('/getLugar', (req, res) => {
     });
 });
 
-// Route: getEficiencia
 app.get('/getEficiencia', (req, res) => {
     db.query('SELECT * FROM eficiencia', (error, results) => {
         if (error) throw error;
@@ -39,7 +32,6 @@ app.get('/getEficiencia', (req, res) => {
     });
 });
 
-// Route: getSensores
 app.get('/getSensores', (req, res) => {
     db.query('SELECT * FROM sensores', (error, results) => {
         if (error) throw error;
@@ -47,7 +39,6 @@ app.get('/getSensores', (req, res) => {
     });
 });
 
-// Route: getSensor?fecha
 app.get('/getSensor', (req, res) => {
     const fecha = req.query.fecha;
     db.query('SELECT * FROM sensores WHERE fecha_hora = ?', [fecha], (error, results) => {
@@ -56,7 +47,6 @@ app.get('/getSensor', (req, res) => {
     });
 });
 
-// Route: setSensor
 app.post('/setSensor', (req, res) => {
     const { temperatura, humedad, orientacion, luz, id_lugar, fecha_hora } = req.body;
     db.query('INSERT INTO sensores (temperatura, humedad, orientacion, luz, id_lugar, fecha_hora) VALUES (?, ?, ?, ?, ?, ?)',
@@ -68,7 +58,6 @@ app.post('/setSensor', (req, res) => {
     );
 });
 
-// Route: setLugar
 app.post('/setLugar', (req, res) => {
     const { latitud, longitud } = req.body;
 
@@ -79,4 +68,8 @@ app.post('/setLugar', (req, res) => {
             res.json({ message: 'Lugar data inserted successfully' });
         }
     );
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
