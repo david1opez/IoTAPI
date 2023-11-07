@@ -1,14 +1,17 @@
 import express from 'express';
 import cors from 'cors';
 import mysql2 from 'mysql2'
+import dotenv from 'dotenv'
 
 const app = express();
 const port = 3000;
 
+dotenv.config()
+
 app.use(cors());
 app.use(express.json());
 
-const db = mysql2.createConnection('mysql://hrbc9gfhf5orlx0vryc4:pscale_pw_SokC0NinuQDH6rIizyDOXzIihMHUZElCxwvYDscATOU@aws.connect.psdb.cloud/iotproyecto?ssl={"rejectUnauthorized":true}')
+const db = mysql2.createConnection(process.env.DATABASE_URL)
 
 db.connect((err) => {
     if (err) {
