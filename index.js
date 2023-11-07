@@ -13,15 +13,15 @@ app.use(express.json());
 
 const db = mysql2.createConnection(process.env.DATABASE_URL)
 
-db.connect((err) => {
-    if (err) {
-        console.error('Error connecting to MySQL: ' + err.stack);
-        return;
-    }
-    console.log('Connected to MySQL as id ' + db.threadId);
-});
-
 app.get('/getLugar', (req, res) => {
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return;
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
+
     db.query('SELECT * FROM lugar', (error, results) => {
         if (error) throw error;
         res.json(results);
@@ -29,6 +29,14 @@ app.get('/getLugar', (req, res) => {
 });
 
 app.get('/getEficiencia', (req, res) => {
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return;
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
+
     db.query('SELECT * FROM eficiencia', (error, results) => {
         if (error) throw error;
         res.json(results);
@@ -36,6 +44,14 @@ app.get('/getEficiencia', (req, res) => {
 });
 
 app.get('/getSensores', (req, res) => {
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return;
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
+
     db.query('SELECT * FROM sensores', (error, results) => {
         if (error) throw error;
         res.json(results);
@@ -44,6 +60,15 @@ app.get('/getSensores', (req, res) => {
 
 app.get('/getSensor', (req, res) => {
     const fecha = req.query.fecha;
+
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return;
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
+
     db.query('SELECT * FROM sensores WHERE fecha_hora = ?', [fecha], (error, results) => {
         if (error) throw error;
         res.json(results);
@@ -52,6 +77,15 @@ app.get('/getSensor', (req, res) => {
 
 app.post('/setSensor', (req, res) => {
     const { temperatura, humedad, orientacion, luz, id_lugar, fecha_hora } = req.body;
+
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return;
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
+
     db.query('INSERT INTO sensores (temperatura, humedad, orientacion, luz, id_lugar, fecha_hora) VALUES (?, ?, ?, ?, ?, ?)',
         [temperatura, humedad, orientacion, luz, id_lugar, fecha_hora],
         (error, results) => {
@@ -63,6 +97,14 @@ app.post('/setSensor', (req, res) => {
 
 app.post('/setLugar', (req, res) => {
     const { latitud, longitud } = req.body;
+
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return;
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
 
     db.query('INSERT INTO lugar (latitud, longitud) VALUES (?, ?)',
         [latitud, longitud],
