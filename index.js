@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mysql2 from 'mysql2'
 import dotenv from 'dotenv'
+import bodyParser from 'body-parser';
 
 const app = express();
 const port = 3000;
@@ -10,6 +11,10 @@ dotenv.config()
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(express.Router());
 
 const db = mysql2.createConnection(process.env.DATABASE_URL)
 
