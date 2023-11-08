@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 app.use(express.Router());
 
-const db = mysql2.createConnection(process.env.DATABASE_URL)
+const db = mysql2.createConnection(process.env.DATABASE_URL);
 
 app.get('/getLugar', (req, res) => {
     db.connect((err) => {
