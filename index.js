@@ -100,6 +100,47 @@ app.post('/setSensor', (req, res) => {
     );
 });
 
+app.post('/updateSensor', (req, res) => {
+    const { fieldsToUpdate, fecha_hora } = req.body;
+
+    // Ensure that fieldsToUpdate is an array
+    if (!Array.isArray(fieldsToUpdate)) {
+        return res.status(400).json({ message: 'Invalid input for fieldsToUpdate' });
+    }
+
+    // Construct SET part of the SQL query dynamically based on fieldsToUpdate
+    const setClause = fieldsToUpdate.map(({ field, value }) => `${field}=?`).join(', ');
+
+    // Create an array of values to replace placeholders in the SQL query
+    const values = fieldsToUpdate.map(({ value }) => value);
+    values.push(fecha_hora); // Add fecha_hora as the last parameter
+
+    db.connect((err) => {
+        if (err) {
+            console.error('Error connecting to MySQL: ' + err.stack);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Connected to MySQL as id ' + db.threadId);
+    });
+
+    db.query(
+        `UPDATE sensores SET ${setClause} WHERE fecha_hora=?`,
+        values,
+        (error, results) => {
+            if (error) {
+                console.error('Error updating sensor data: ' + error.message);
+                return res.status(500).json({ message: 'Internal Server Error' });
+            }
+
+            if (results.affectedRows > 0) {
+                res.json({ message: 'Sensor data updated successfully' });
+            } else {
+                res.status(404).json({ message: 'Sensor not found with the provided fecha_hora' });
+            }
+        }
+    );
+});
+
 app.post('/setLugar', (req, res) => {
     const { latitud, longitud } = req.body;
 
