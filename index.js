@@ -111,11 +111,8 @@ app.post('/setSensor', (req, res) => {
         }
     );
 });
-
 app.post('/updateSensor', (req, res) => {
     let { fieldsToUpdate, fecha_hora } = req.body;
-
-    console.log(typeof fieldsToUpdate);
 
     fecha_hora = fecha_hora.replace("%20", " ");
 
@@ -125,10 +122,13 @@ app.post('/updateSensor', (req, res) => {
     }
 
     // Construct SET part of the SQL query dynamically based on fieldsToUpdate
-    const setClause = fieldsToUpdate.map(({ field, value }) => `${field}=?`).join(', ');
+    const setClause = fieldsToUpdate.map(obj => Object.entries(obj).map(([key, value]) => `${key} = ?`).join(',')).join(',');
 
     // Create an array of values to replace placeholders in the SQL query
-    const values = fieldsToUpdate.map(({ value }) => value);
+    const values = fieldsToUpdate.map((obj) => Object.values(obj));
+
+    console.log(values);
+
     values.push(fecha_hora); // Add fecha_hora as the last parameter
 
     db.connect((err) => {
@@ -137,25 +137,24 @@ app.post('/updateSensor', (req, res) => {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
         console.log('Connected to MySQL as id ' + db.threadId);
+
+        // Use parameterized queries to prevent SQL injection
+        db.query(`UPDATE sensores SET ${setClause} WHERE fecha_hora = ?`, [...values],
+            (error, results) => {
+                if (error) {
+                    console.error('Error updating sensor data: ' + error.message);
+                    return res.status(500).json({ message: 'Internal Server Error' });
+                }
+
+                if (results.affectedRows > 0) {
+                    res.json({ message: 'Sensor data updated successfully' });
+                } else {
+                    res.status(404).json({ message: 'Sensor not found with the provided fecha_hora' });
+                }
+        });
     });
-
-    db.query(
-        `UPDATE sensores SET ${setClause} WHERE fecha_hora=?`,
-        values,
-        (error, results) => {
-            if (error) {
-                console.error('Error updating sensor data: ' + error.message);
-                return res.status(500).json({ message: 'Internal Server Error' });
-            }
-
-            if (results.affectedRows > 0) {
-                res.json({ message: 'Sensor data updated successfully' });
-            } else {
-                res.status(404).json({ message: 'Sensor not found with the provided fecha_hora' });
-            }
-        }
-    );
 });
+
 
 app.post('/setLugar', (req, res) => {
     const { latitud, longitud } = req.body;
