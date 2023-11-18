@@ -65,12 +65,8 @@ app.get('/getSensores', (req, res) => {
 
 app.get('/getSensor', (req, res) => {
     let fecha = req.query.fecha;
-
-    console.log(fecha);
     
     fecha = fecha.replace("%20", " ");
-
-    console.log(fecha);
 
     db.connect((err) => {
         if (err) {
@@ -81,13 +77,19 @@ app.get('/getSensor', (req, res) => {
     });
 
     db.query('SELECT * FROM sensores WHERE fecha_hora = ?', [fecha], (error, results) => {
-        if (error) throw error;
+        if (error) {
+            console.error("Error on query: " + error);
+            res.status(402);
+            return;
+        };
         res.json(results);
     });
 });
 
 app.post('/setSensor', (req, res) => {
-    const { temperatura, humedad, orientacion, luz, id_lugar, fecha_hora } = req.body;
+    let { temperatura, humedad, orientacion, luz, id_lugar, fecha_hora } = req.body;
+    
+    fecha_hora = fecha.replace("%20", " ");
 
     db.connect((err) => {
         if (err) {
@@ -100,14 +102,20 @@ app.post('/setSensor', (req, res) => {
     db.query('INSERT INTO sensores (temperatura, humedad, orientacion, luz, id_lugar, fecha_hora) VALUES (?, ?, ?, ?, ?, ?)',
         [temperatura, humedad, orientacion, luz, id_lugar, fecha_hora],
         (error, results) => {
-            if (error) throw error;
+            if (error) {
+                console.error("Error on query: " + error);
+                res.status(402);
+                return;
+            };
             res.json({ message: 'Sensor data inserted successfully' });
         }
     );
 });
 
 app.post('/updateSensor', (req, res) => {
-    const { fieldsToUpdate, fecha_hora } = req.body;
+    let { fieldsToUpdate, fecha_hora } = req.body;
+
+    fecha_hora = fecha_hora.replace("%20", " ");
 
     // Ensure that fieldsToUpdate is an array
     if (!Array.isArray(fieldsToUpdate)) {
