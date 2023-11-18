@@ -127,6 +127,8 @@ app.post('/updateSensor', (req, res) => {
     // Construct SET part of the SQL query dynamically based on fieldsToUpdate
     const setClause = fieldsToUpdate.map(({ field, value }) => `${field}=?`).join(', ');
 
+    console.log(setClause);
+
     // Create an array of values to replace placeholders in the SQL query
     const values = fieldsToUpdate.map(({ value }) => value);
     values.push(fecha_hora); // Add fecha_hora as the last parameter
