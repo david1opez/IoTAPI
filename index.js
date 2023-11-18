@@ -100,7 +100,7 @@ app.post('/setSensor', (req, res) => {
     });
 
     db.query('INSERT INTO sensores (temperatura, humedad, orientacion, luz, id_lugar, fecha_hora) VALUES (?, ?, ?, ?, ?, ?)',
-        [temperatura, humedad, orientacion, luz``, id_lugar, fecha_hora],
+        [temperatura, humedad, orientacion, luz, id_lugar, fecha_hora],
         (error, results) => {
             if (error) {
                 console.error("Error on query: " + error);
