@@ -115,7 +115,7 @@ app.post('/setSensor', (req, res) => {
 app.post('/updateSensor', (req, res) => {
     let { fieldsToUpdate, fecha_hora } = req.body;
 
-    console.log(fieldsToUpdate);
+    console.log(typeof fieldsToUpdate);
 
     fecha_hora = fecha_hora.replace("%20", " ");
 
@@ -126,8 +126,6 @@ app.post('/updateSensor', (req, res) => {
 
     // Construct SET part of the SQL query dynamically based on fieldsToUpdate
     const setClause = fieldsToUpdate.map(({ field, value }) => `${field}=?`).join(', ');
-
-    console.log(setClause);
 
     // Create an array of values to replace placeholders in the SQL query
     const values = fieldsToUpdate.map(({ value }) => value);
