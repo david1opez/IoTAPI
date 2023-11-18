@@ -89,7 +89,7 @@ app.get('/getSensor', (req, res) => {
 app.post('/setSensor', (req, res) => {
     let { temperatura, humedad, orientacion, luz, id_lugar, fecha_hora } = req.body;
     
-    fecha_hora = fecha.replace("%20", " ");
+    fecha_hora = fecha_hora.replace("%20", " ");
 
     db.connect((err) => {
         if (err) {
