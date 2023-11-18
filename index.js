@@ -64,7 +64,13 @@ app.get('/getSensores', (req, res) => {
 });
 
 app.get('/getSensor', (req, res) => {
-    const fecha = req.query.fecha;
+    let fecha = req.query.fecha;
+
+    console.log(fecha);
+    
+    fecha = fecha.replace("%20", " ");
+
+    console.log(fecha);
 
     db.connect((err) => {
         if (err) {
