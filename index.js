@@ -3,6 +3,7 @@ import cors from 'cors';
 import mysql2 from 'mysql2'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser';
+import e from 'express';
 
 const app = express();
 const port = 3000;
@@ -106,11 +107,14 @@ app.post('/setSensor', (req, res) => {
                 console.error("Error on query: " + error);
                 res.status(402);
                 return;
-            };
+            } else {
+                console.log(results);
+            }
             res.json({ message: 'Sensor data inserted successfully' });
         }
-    );
+    )
 });
+
 app.post('/updateSensor', (req, res) => {
     let { fieldsToUpdate, fecha_hora } = req.body;
 
@@ -154,6 +158,8 @@ app.post('/updateSensor', (req, res) => {
         });
     });
 });
+
+//make a request to the previous route?
 
 
 app.post('/setLugar', (req, res) => {
